@@ -293,7 +293,7 @@ class Bot extends Client{
             name: "▶"
           }),
   
-        //new ButtonComponent()//Da togliere senza premium
+        //new ButtonComponent()//To remove if user has no premium
         // .setStyle(ButtonStyle.Secondary)
         //  .setCustomId(`controller:${guild}:HighVolume`)
         //  .setEmoji({
