@@ -1,6 +1,6 @@
 const Controller = require("../utils/controller");
 module.exports = async (client, interaction) => {
-  if (interaction.isCommand()) {
+  if (interaction.isChatInputCommand()) {
     let command = client.slashCommands.find(
       (x) => x.name == interaction.commandName
     );

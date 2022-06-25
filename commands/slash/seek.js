@@ -1,5 +1,5 @@
 const SlashCommand = require("../../core/SlashCommand");
-const { Embed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const ms= require("ms");
 
 const command = new SlashCommand()
@@ -17,14 +17,14 @@ const command = new SlashCommand()
 
     let player = client.manager.players.get(interaction.guild.id);
     if (!player) {
-      const queueEmbed = new Embed()
+      const queueEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There's nothing playing in the queue**");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
     if (!interaction.member.voice.channel) {
-      const joinEmbed = new Embed()
+      const joinEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in a voice channel to use this command.**"
@@ -33,12 +33,12 @@ const command = new SlashCommand()
     }
 
     if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(
+      interaction.guild.members.me.voice.channel &&
+      !interaction.guild.members.me.voice.channel.equals(
         interaction.member.voice.channel
       )
     ) {
-      const sameEmbed = new Embed()
+      const sameEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in the same voice channel as me to use this command!**"
@@ -54,7 +54,7 @@ const command = new SlashCommand()
     if (time <= duration) {
       if (time > position) {
         player.seek(time);
-        let thing = new Embed()
+        let thing = new EmbedBuilder()
           .setColor(client.config.color)
           .setDescription(
             `⏩ | **${player.queue.current.title}** has been seeked to **${ms(
@@ -64,7 +64,7 @@ const command = new SlashCommand()
         return interaction.editReply({ embeds: [thing] });
       } else {
         player.seek(time);
-        let thing = new Embed()
+        let thing = new EmbedBuilder()
           .setColor(client.config.color)
           .setDescription(
             `:rewind: | **${player.queue.current.title}** has been rewinded to **${ms(
@@ -74,7 +74,7 @@ const command = new SlashCommand()
         return interaction.editReply({ embeds: [thing] });
       }
     } else {
-      let thing = new Embed()
+      let thing = new EmbedBuilder()
         .setColor(client.config.color)
         .setDescription(
           `Cannot seek current playing track. This may happened because seek duration has exceeded track duration`

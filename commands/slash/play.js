@@ -1,4 +1,4 @@
-const { Embed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const SlashCommand = require("../../core/SlashCommand");
 
 const command = new SlashCommand()
@@ -12,7 +12,7 @@ const command = new SlashCommand()
   )
   .setRun(async (client, interaction, options) => {
     if (!interaction.member.voice.channel) {
-      const embed = new Embed()
+      const embed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in a voice channel to use this command!**"
@@ -21,10 +21,10 @@ const command = new SlashCommand()
     }
   
     if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(interaction.member.voice.channel)
+      interaction.guild.members.me.voice.channel &&
+      !interaction.guild.members.me.voice.channel.equals(interaction.member.voice.channel)
     ) {
-      const embed = new Embed()
+      const embed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in the same voice channel as me to use this command!**"
@@ -40,17 +40,17 @@ const command = new SlashCommand()
     }
     if (channel.type == "GUILD_STAGE_VOICE") {
       setTimeout(() => {
-        if (interaction.guild.me.voice.suppress == true) {
+        if (interaction.guild.members.me.voice.suppress == true) {
           try {
-            interaction.guild.me.voice.setSuppressed(false);
+            interaction.guild.members.me.voice.setSuppressed(false);
           } catch (e) {
-            interaction.guild.me.voice.setRequestToSpeak(true);
+            interaction.guild.members.me.voice.setRequestToSpeak(true);
           }
         }
       }, 2000);
     }
     await interaction.reply({
-      embeds: [new Embed()
+      embeds: [new EmbedBuilder()
         .setColor(client.config.color)
         .setDescription(":mag_right: **Searching...**")],           
     });
@@ -66,7 +66,7 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [new Embed()
+          embeds: [new EmbedBuilder()
             .setColor(client.config.errcolor)
             .setDescription("There was an error while searching")],
         })
@@ -77,7 +77,7 @@ const command = new SlashCommand()
       if (!player.queue.current) player.destroy();
       return interaction
         .editReply({
-          embeds: [new Embed()
+          embeds: [new EmbedBuilder()
             .setColor(client.config.errcolor)
             .setDescription("No result were found")],
         })
@@ -89,7 +89,7 @@ const command = new SlashCommand()
       if (!player.playing && !player.paused && !player.queue.size)
         player.play();
       let embed = 
-        new Embed()
+        new EmbedBuilder()
         .setAuthor({name :"Added to queue"})
         .setColor(client.config.color)
         .setDescription(`[${res.tracks[0].title}](${res.tracks[0].uri})` || "No Title")
@@ -122,7 +122,7 @@ const command = new SlashCommand()
       )
         player.play();
       let embed = 
-        new Embed()
+        new EmbedBuilder()
         .setAuthor({name :"Playlist added to queue"})
         .setColor(client.config.color)
         .setThumbnail(res.tracks[0].thumbnail)

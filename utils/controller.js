@@ -1,4 +1,4 @@
-const { Embed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 module.exports = async (client, interaction) => {
   let guild = client.guilds.cache.get(interaction.customId.split(":")[1]);
   let property = interaction.customId.split(":")[2];
@@ -7,7 +7,7 @@ module.exports = async (client, interaction) => {
   if (!player) {
     interaction.reply({
       embeds: [
-        new Embed()
+        new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There is no player to control in this server.**"),
       ],
@@ -18,7 +18,7 @@ module.exports = async (client, interaction) => {
     return;
   }
   if (!interaction.member.voice.channel) {
-    const embed = new Embed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.errcolor)
       .setDescription(
         "❌ | **You must be in a voice channel to use this command!**"
@@ -27,10 +27,10 @@ module.exports = async (client, interaction) => {
   }
 
   if (
-    interaction.guild.me.voice.channel &&
-    !interaction.guild.me.voice.channel.equals(interaction.member.voice.channel)
+    interaction.guild.members.me.voice.channel &&
+    !interaction.guild.members.me.voice.channel.equals(interaction.member.voice.channel)
   ) {
-    const embed = new Embed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.errcolor)
       .setDescription(
         "❌ | **You must be in the same voice channel as me to use this command!**"
@@ -41,7 +41,7 @@ module.exports = async (client, interaction) => {
   //  player.setVolume(player.volume - 10);
   //  interaction.reply({
   //    embeds: [
-  //      new Embed()
+  //      new EmbedBuilder()
   //      .setColor(client.config.color)
   //      .setDescription(
   //        "🔉 | **Successfully lowered server volume to** `" +
@@ -60,7 +60,7 @@ module.exports = async (client, interaction) => {
   if (property === "Replay") {
     if (!player.queue.previous) {
       interaction.reply({
-        embeds: [new Embed()
+        embeds: [new EmbedBuilder()
           .setColor(client.config.errcolor)
           .setDescription("❌ | **There is no previous song to replay.**")],
       });
@@ -79,7 +79,7 @@ module.exports = async (client, interaction) => {
     if (player.paused) player.pause(false);
     else player.pause(true);
     interaction.reply({
-      embeds: [new Embed()
+      embeds: [new EmbedBuilder()
         .setColor(client.config.color)
         .setDescription(
           player.paused
@@ -105,7 +105,7 @@ module.exports = async (client, interaction) => {
   //    player.setVolume(player.volume + 10);
   //    interaction.reply({
   //      embeds: [
-  //        new Embed()
+  //        new EmbedBuilder()
   //        .setColor(client.config.color)
   //        .setDescription(
   //          "🔊 | **Successfully increased music volume to** `" +
@@ -120,7 +120,7 @@ module.exports = async (client, interaction) => {
   //  } else {
   //    interaction.reply({
   //      embeds: [
-  //        new Embed()
+  //        new EmbedBuilder()
   //      .setColor(client.config.color)
   //      .setDescription(
   //          "👍 | **Volume is at maximum** `" + player.volume + "%`"

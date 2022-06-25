@@ -1,4 +1,4 @@
-const {Client,Collection,Partials, GatewayIntentBits, ActionRow, ButtonStyle, ButtonComponent, Embed} = require('discord.js')
+const {Client,Collection,Partials, GatewayIntentBits, ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder} = require('discord.js')
 const Cluster = require('discord-hybrid-sharding')
 const colors = require('colors');
 const path = require('path');
@@ -109,7 +109,7 @@ class Bot extends Client{
           if (channel)
             channel.send({
               embeds: [
-                new Embed()
+                new EmbedBuilder()
                   .setColor(client.config.color)
                   .setDescription(`:wave: | Disconnected from <#${oldChannel}>`),
               ],
@@ -155,7 +155,7 @@ class Bot extends Client{
           } | Track has been started playing [${colors.blue(track.title)}]`
         );
         this.function.historyInsert(track, player.options.guild);
-        let trackStartedEmbed = new Embed()
+        let trackStartedEmbed = new EmbedBuilder()
           .setTitle("Now playing")
           .setColor(client.config.color)
           .setDescription(`[${track.title}](${track.uri})` || "No Descriptions")
@@ -188,7 +188,7 @@ class Bot extends Client{
       })
       .on("queueEnd", (player) => {
         this.log(`Player: ${player.options.guild} | Queue has been ended`);
-        let queueEmbed = new Embed()
+        let queueEmbed = new EmbedBuilder()
           .setColor(client.config.color)
           .setTitle("The queue has ended | Bot disconnect in 60s")
           .setFooter({text : 'Queue ended'})
@@ -200,7 +200,7 @@ class Bot extends Client{
           if (!player.playing && !player.twentyFourSeven) {
             setTimeout(() => {
               if (!player.playing && player.state !== "DISCONNECTED") {
-                let disconnectedEmbed = new Embed()
+                let disconnectedEmbed = new EmbedBuilder()
                   .setColor(this.config.color)
                   .setAuthor({name : "Disconnected"})
                   .setDescription(
@@ -264,7 +264,7 @@ class Bot extends Client{
       });
     }
     createController(guild) {
-      return new ActionRow().addComponents(
+      return new ActionRowBuilder().addComponents(
         //new ButtonComponent()//Da togliere senza premium
           //.setStyle(ButtonStyle.Secondary)
           //.setCustomId(`controller:${guild}:LowVolume`)
@@ -272,28 +272,28 @@ class Bot extends Client{
           //  name: "🔉"
           //}),
   
-        new ButtonComponent()
+        new ButtonBuilder()
           .setStyle(ButtonStyle.Primary)
           .setCustomId(`controller:${guild}:Replay`)
           .setEmoji({
             name: "◀"
           }),
   
-        new ButtonComponent()
+        new ButtonBuilder()
           .setStyle(ButtonStyle.Danger)
           .setCustomId(`controller:${guild}:PlayAndPause`)
           .setEmoji({
             name: "⏯"
           }),
   
-        new ButtonComponent()
+        new ButtonBuilder()
           .setStyle(ButtonStyle.Primary)
           .setCustomId(`controller:${guild}:Next`)
           .setEmoji({
             name: "▶"
           }),
   
-        //new ButtonComponent()//To remove if user has no premium
+        //new ButtonComponent()//Da togliere senza premium
         // .setStyle(ButtonStyle.Secondary)
         //  .setCustomId(`controller:${guild}:HighVolume`)
         //  .setEmoji({

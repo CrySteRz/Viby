@@ -1,5 +1,5 @@
 const SlashCommand = require("../../core/SlashCommand");
-const { Embed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 const command = new SlashCommand()
   .setName("shuffle")
@@ -7,21 +7,21 @@ const command = new SlashCommand()
   .setRun(async (client, interaction, options) => {
     let player = client.manager.players.get(interaction.guild.id);
     if (!player) {
-      const queueEmbed = new Embed()
+      const queueEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There's nothing playing in the queue**");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
     if (!player.playing) {
-      const queueEmbed = new Embed()
+      const queueEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There's nothing playing**");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
     if (!interaction.member.voice.channel) {
-      const joinEmbed = new Embed()
+      const joinEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in a voice channel to use this command!**"
@@ -30,12 +30,12 @@ const command = new SlashCommand()
     }
 
     if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(
+      interaction.guild.members.me.voice.channel &&
+      !interaction.guild.members.me.voice.channel.equals(
         interaction.member.voice.channel
       )
     ) {
-      const sameEmbed = new Embed()
+      const sameEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in the same voice channel as me to use this command!**"
@@ -43,7 +43,7 @@ const command = new SlashCommand()
       return interaction.reply({ embeds: [sameEmbed], ephemeral: true });
     }
     if (!player.queue || !player.queue.length || player.queue.length === 0) {
-      const AddEmbed = new Embed()
+      const AddEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There are no songs in the queue.**");
       return interaction.reply({ embeds: [AddEmbed], ephemeral: true });
@@ -51,7 +51,7 @@ const command = new SlashCommand()
 
     //  if the queue is not empty, shuffle the entire queue
     player.queue.shuffle();
-    const ShuffleEmbed = new Embed()
+    const ShuffleEmbed = new EmbedBuilder()
       .setColor(client.config.color)
       .setDescription("🔀 | **Successfully shuffled the queue.**");
     return interaction.reply({ embeds: [ShuffleEmbed] });

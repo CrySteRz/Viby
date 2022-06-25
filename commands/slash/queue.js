@@ -1,5 +1,5 @@
 const SlashCommand = require("../../core/SlashCommand");
-const { Embed, ButtonComponent, ActionRow, ButtonStyle } = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require("discord.js");
 const load = require("lodash");
 const pms = require("pretty-ms");
 
@@ -10,21 +10,21 @@ const command = new SlashCommand()
   .setRun(async (client, interaction, options) => {
     let player = client.manager.players.get(interaction.guild.id);
     if (!player) {
-      const queueEmbed = new Embed()
+      const queueEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There's nothing playing in the queue**");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
     if (!player.playing) {
-      const queueEmbed = new Embed()
+      const queueEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription("❌ | **There's nothing playing**");
       return interaction.reply({ embeds: [queueEmbed], ephemeral: true });
     }
 
     if (!interaction.member.voice.channel) {
-      const joinEmbed = new Embed()
+      const joinEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in a voice channel to use this command!**"
@@ -33,12 +33,12 @@ const command = new SlashCommand()
     }
 
     if (
-      interaction.guild.me.voice.channel &&
-      !interaction.guild.me.voice.channel.equals(
+      interaction.guild.members.me.voice.channel &&
+      !interaction.guild.members.me.voice.channel.equals(
         interaction.member.voice.channel
       )
     ) {
-      const sameEmbed = new Embed()
+      const sameEmbed = new EmbedBuilder()
         .setColor(client.config.errcolor)
         .setDescription(
           "❌ | **You must be in the same voice channel as me to use this command!**"
@@ -48,7 +48,7 @@ const command = new SlashCommand()
     await interaction.deferReply().catch(() => {});
     if (!player.queue.size || player.queue.size === 0) {
       let song = player.queue.current;
-      const embed = new Embed()
+      const embed = new EmbedBuilder()
         .setColor(client.config.color)
         .setDescription(`**♪ | Now playing:** [${song.title}](${song.uri})`)
         .addFields(
@@ -89,7 +89,7 @@ const command = new SlashCommand()
 
       if (player.queue.size < 5 || player.queue.totalSize < 5) {
         let song = player.queue.current;
-        const embedTwo = new Embed()
+        const embedTwo = new EmbedBuilder()
           .setColor(client.config.color)
           .setDescription(
             `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
@@ -129,7 +129,7 @@ const command = new SlashCommand()
           .catch(() => {});
       } else {
         let song = player.queue.current;
-        const embedThree = new Embed()
+        const embedThree = new EmbedBuilder()
           .setColor(client.config.color)
           .setDescription(
             `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
@@ -161,12 +161,12 @@ const command = new SlashCommand()
           .setFooter({
             text: `Page ${page + 1}/${pages.length}`,
           });
-        const buttons_page = new ActionRow().addComponents(
-        new ButtonComponent()
+        const buttons_page = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
           .setCustomId("queue_2")
           .setEmoji({name : '⏮️'})
           .setStyle(ButtonStyle.Primary),
-          new ButtonComponent()
+          new ButtonBuilder()
           .setCustomId("queue_1")
           .setEmoji({name : '⏭️'})
           .setStyle(ButtonStyle.Primary),
@@ -199,7 +199,7 @@ const command = new SlashCommand()
             await button.deferUpdate().catch(() => {});
             page = page + 1 < pages.length ? ++page : 0;
 
-            const embedFour = new Embed()
+            const embedFour = new EmbedBuilder()
               .setColor(client.config.color)
               .setDescription(
                 `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
@@ -242,7 +242,7 @@ const command = new SlashCommand()
             await button.deferUpdate().catch(() => {});
             page = page > 0 ? --page : pages.length - 1;
 
-            const embedFive = new Embed()
+            const embedFive = new EmbedBuilder()
               .setColor(client.config.color)
               .setDescription(
                 `**♪ | Now playing:** [${song.title}](${song.uri}) [${player.queue.current.requester}]\n\n**Queued Tracks**\n${pages[page]}`
